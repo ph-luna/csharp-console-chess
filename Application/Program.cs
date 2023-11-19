@@ -1,7 +1,4 @@
-﻿using tabuleiro;
+﻿using board;
 
-Posicao P;
-
-P = new Posicao(3, 4);
-
-Console.WriteLine("Posição: " + P);
+Board board = new(8, 8);
+Screen.printBoard(board);

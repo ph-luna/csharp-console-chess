@@ -12,4 +12,9 @@ class Board
     Columns = columns;
     _pieces = new Piece[lines, columns];
   }
+
+  public Piece GetPieceInPosition(int line, int column)
+  {
+    return _pieces[line, column];
+  }
 }

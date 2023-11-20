@@ -17,22 +17,22 @@ class Rook : Piece
     return "♖";
   }
 
-  public override bool[,] GetPossibleMoviments()
+  public override bool[,] GetPossibleMovements()
   {
-    bool[,] possibleMoviments = new bool[Board.Lines, Board.Columns];
+    bool[,] possibleMovements = new bool[Board.Lines, Board.Columns];
 
     foreach (int[] direction in PossibleDirections)
     {
       Position projectedPosition = new(Position!.Line, Position.Column);
       projectedPosition.Change(projectedPosition.Line + direction[0], projectedPosition.Column + direction[1]);
-      while (Board.IsPositionValid(projectedPosition) && CanMove(projectedPosition))
+      while (CanMove(projectedPosition))
       {
-        possibleMoviments[projectedPosition.Line, projectedPosition.Column] = true;
+        possibleMovements[projectedPosition.Line, projectedPosition.Column] = true;
         if (Board.GetPieceInPosition(projectedPosition) is not null && Board.GetPieceInPosition(projectedPosition)!.Color != Color) break;
         projectedPosition.Change(projectedPosition.Line + direction[0], projectedPosition.Column + direction[1]);
       }
     }
 
-    return possibleMoviments;
+    return possibleMovements;
   }
 }

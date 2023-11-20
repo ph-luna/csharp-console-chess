@@ -4,7 +4,7 @@ abstract class Piece
 {
   public Position? Position { get; set; }
   public Color Color { get; protected set; }
-  public int Moviments { get; protected set; }
+  public int Movements { get; protected set; }
   public Board Board { get; protected set; }
   public List<int[]> PossibleDirections { get; protected set; }
 
@@ -13,19 +13,35 @@ abstract class Piece
     Position = null;
     Board = board;
     Color = color;
-    Moviments = 0;
+    Movements = 0;
     PossibleDirections = new List<int[]>();
   }
 
-  public void IncreaseMoviments()
+  public abstract bool[,] GetPossibleMovements();
+  public void IncreaseMovements()
   {
-    Moviments++;
+    Movements++;
   }
 
-  public abstract bool[,] GetPossibleMoviments();
+  public bool HasPossibleMovements()
+  {
+    bool[,] possibleMovements = GetPossibleMovements();
+
+    foreach (bool movement in possibleMovements)
+    {
+      if (movement) return true;
+    }
+    return false;
+  }
+
+  public bool CanMoveTo(Position position)
+  {
+    return GetPossibleMovements()[position.Line, position.Column];
+  }
 
   protected bool CanMove(Position position)
   {
+    if (!Board.IsPositionValid(position)) return false;
     Piece? piece = Board.GetPieceInPosition(position);
     return piece is null || piece.Color != Color;
   }

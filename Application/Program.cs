@@ -7,20 +7,31 @@ try
 
   while (!chessMatch.Finished)
   {
-    Console.Clear();
-    Screen.PrintBoard(chessMatch.Board);
+    try
+    {
+      Console.Clear();
+      Screen.PrintBoard(chessMatch.Board);
+      Console.WriteLine($"\nTurn: {chessMatch.Turn}");
+      Console.WriteLine($"Current Player: {chessMatch.CurrentPlayer}");
 
-    Console.Write("\nPiece at Position: ");
-    Position origin = Screen.ReadChessPosition().ToPosition();
+      Console.Write("\nPiece at Position: ");
+      Position origin = Screen.ReadChessPosition().ToPosition();
+      chessMatch.ValidateOrigin(origin);
 
-    bool[,] possibleMoviments = chessMatch.Board.GetPieceInPosition(origin)!.GetPossibleMoviments();
-    Console.Clear();
-    Screen.PrintBoard(chessMatch.Board, possibleMoviments);
+      bool[,] possibleMovements = chessMatch.Board.GetPieceInPosition(origin)!.GetPossibleMovements();
+      Console.Clear();
+      Screen.PrintBoard(chessMatch.Board, possibleMovements);
 
-    Console.Write("\nDestination: ");
-    Position destination = Screen.ReadChessPosition().ToPosition();
+      Console.Write("\nDestination: ");
+      Position destination = Screen.ReadChessPosition().ToPosition();
+      chessMatch.ValidateDestination(origin, destination);
 
-    chessMatch.MakeMove(origin, destination);
+      chessMatch.MakePlay(origin, destination);
+    }
+    catch (BoardException ex)
+    {
+      Screen.PrintMessage(ex.Message);
+    }
   }
 }
 catch (Exception ex)

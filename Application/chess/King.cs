@@ -16,20 +16,20 @@ class King : Piece
     return "♔";
   }
 
-  public override bool[,] GetPossibleMoviments()
+  public override bool[,] GetPossibleMovements()
   {
-    bool[,] possibleMoviments = new bool[Board.Lines, Board.Columns];
+    bool[,] possibleMovements = new bool[Board.Lines, Board.Columns];
 
     foreach (int[] direction in PossibleDirections)
     {
       Position projectedPosition = new(Position!.Line, Position.Column);
       projectedPosition.Change(projectedPosition.Line + direction[0], projectedPosition.Column + direction[1]);
-      if (CanMove(projectedPosition) && Board.IsPositionValid(projectedPosition))
+      if (CanMove(projectedPosition))
       {
-        possibleMoviments[projectedPosition.Line, projectedPosition.Column] = true;
+        possibleMovements[projectedPosition.Line, projectedPosition.Column] = true;
       }
     }
 
-    return possibleMoviments;
+    return possibleMovements;
   }
 }

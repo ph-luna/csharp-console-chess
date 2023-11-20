@@ -97,4 +97,11 @@ class Screen
     int line = int.Parse(input[1] + "");
     return new ChessPosition(column, line);
   }
+
+  public static void PrintMessage(string message)
+  {
+    Console.Clear();
+    Console.WriteLine($"\n[Message]: {message}\n\n\nPress any key to continue...");
+    Console.ReadKey();
+  }
 }

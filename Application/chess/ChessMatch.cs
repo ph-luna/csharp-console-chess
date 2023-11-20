@@ -1,3 +1,4 @@
+using System.Security.Cryptography;
 using board;
 
 namespace chess;
@@ -60,6 +61,11 @@ class ChessMatch
       throw new BoardException("You can't put you in CHECK.");
     }
     InCheck = IsInCheck(AdversaryColor(CurrentPlayer));
+    if (IsCheckMate(AdversaryColor(CurrentPlayer)))
+    {
+      Finished = true;
+      return;
+    }
     Turn++;
     CurrentPlayer = CurrentPlayer == Color.White ? Color.Black : Color.White;
   }
@@ -77,7 +83,7 @@ class ChessMatch
     if (!pieceInPosition.CanMoveTo(destination)) throw new BoardException("You can't move this piece to this position.");
   }
 
-  public HashSet<Piece> GetCapturedPiecesByColor(Color color)
+  public HashSet<Piece> CapturedPiecesByColor(Color color)
   {
     HashSet<Piece> filteredCapturedPieces = new();
     foreach (Piece piece in CapturedPieces)
@@ -87,7 +93,7 @@ class ChessMatch
     return filteredCapturedPieces;
   }
 
-  public HashSet<Piece> GetInGamePiecesByColor(Color color)
+  public HashSet<Piece> InGamePiecesByColor(Color color)
   {
     HashSet<Piece> filteredInGamePiecesPieces = new();
     foreach (Piece piece in InGamePieces)
@@ -100,7 +106,7 @@ class ChessMatch
   public bool IsInCheck(Color color)
   {
     Piece king = FindKing(color);
-    foreach (Piece piece in GetInGamePiecesByColor(AdversaryColor(color)))
+    foreach (Piece piece in InGamePiecesByColor(AdversaryColor(color)))
     {
       bool[,] possibleMovements = piece.GetPossibleMovements();
       if (possibleMovements[king.Position!.Line, king.Position.Column])
@@ -111,6 +117,35 @@ class ChessMatch
     return false;
   }
 
+  public bool IsCheckMate(Color color)
+  {
+    if (!IsInCheck(color))
+    {
+      return false;
+    }
+    foreach (Piece piece in InGamePiecesByColor(color))
+    {
+      bool[,] possibleMoviments = piece.GetPossibleMovements();
+
+      for (int l = 0; l < Board.Lines; l++)
+      {
+        for (int c = 0; c < Board.Columns; c++)
+        {
+          if (possibleMoviments[l, c])
+          {
+            Position origin = new(piece.Position!.Line, piece.Position.Column);
+            Position destination = new(l, c);
+            Piece? capturedPiece = MakeMove(origin, destination);
+            bool stillInCheck = IsInCheck(color);
+            UndoMove(origin, destination, capturedPiece);
+            if (!stillInCheck) return false;
+          }
+        }
+      }
+    }
+    return true;
+  }
+
   private static Color AdversaryColor(Color color)
   {
     return Color.White == color ? Color.Black : Color.White;
@@ -118,7 +153,7 @@ class ChessMatch
 
   private Piece FindKing(Color color)
   {
-    foreach (Piece piece in GetInGamePiecesByColor(color))
+    foreach (Piece piece in InGamePiecesByColor(color))
     {
       if (piece is King)
       {
@@ -136,18 +171,23 @@ class ChessMatch
 
   private void PlaceAllPieces()
   {
-    PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('c', 1));
-    PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('c', 2));
-    PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('d', 2));
-    PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('e', 2));
-    PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('e', 1));
-    PlaceNewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
+    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('c', 1));
+    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('c', 2));
+    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('d', 2));
+    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('e', 2));
+    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('e', 1));
+    // PlaceNewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
+    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 8));
+    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 7));
+    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('d', 7));
+    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('e', 7));
+    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('e', 8));
+    // PlaceNewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
 
-    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 8));
-    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 7));
-    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('d', 7));
-    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('e', 7));
-    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('e', 8));
-    PlaceNewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
+    PlaceNewPiece(new King(Board, Color.White), new ChessPosition('a', 8));
+    PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('b', 8));
+    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('h', 7));
+    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 1));
+    PlaceNewPiece(new King(Board, Color.Black), new ChessPosition('d', 1));
   }
 }

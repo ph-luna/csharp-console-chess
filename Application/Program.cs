@@ -31,6 +31,7 @@ try
       Screen.PrintMessage(ex.Message);
     }
   }
+  Screen.PrintCheckMate(chessMatch);
 }
 catch (Exception ex)
 {

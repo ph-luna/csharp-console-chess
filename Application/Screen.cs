@@ -30,7 +30,7 @@ class Screen
 
   public static void PrintPiecesSet(ChessMatch chessMatch, Color color)
   {
-    HashSet<Piece> pieces = chessMatch.GetCapturedPiecesByColor(color);
+    HashSet<Piece> pieces = chessMatch.CapturedPiecesByColor(color);
     string printColor = color == Color.White ? WhiteColor : YellowColor;
     Console.Write(color == Color.White ? "\nWhite: " : "\nBlack: ".Pastel(printColor));
     Console.Write("[".Pastel(printColor));
@@ -39,6 +39,15 @@ class Screen
       Console.Write(piece.ToString().Pastel(printColor) + " ");
     }
     Console.Write("]".Pastel(printColor));
+  }
+
+  public static void PrintCheckMate(ChessMatch chessMatch)
+  {
+    string printColor = chessMatch.CurrentPlayer == Color.White ? WhiteColor : YellowColor;
+    Console.Clear();
+    PrintBoard(chessMatch.Board);
+    Console.WriteLine($"\n\nCHECKMATE! {chessMatch.CurrentPlayer} is the winner!\n\nPress any key to continue...".Pastel(printColor));
+    Console.ReadKey();
   }
 
   public static void PrintPiece(Piece piece, bool isOdd, bool isPossible = false)

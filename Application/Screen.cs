@@ -1,5 +1,6 @@
 
 using board;
+using chess;
 using Pastel;
 
 class Screen
@@ -52,5 +53,13 @@ class Screen
       Console.WriteLine();
     }
     Console.WriteLine("  a b c d e f g h");
+  }
+
+  public static ChessPosition ReadChessPosition()
+  {
+    string input = Console.ReadLine() ?? "";
+    char column = input[0];
+    int line = int.Parse(input[1] + "");
+    return new ChessPosition(column, line);
   }
 }

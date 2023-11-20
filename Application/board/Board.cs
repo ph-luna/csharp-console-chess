@@ -4,7 +4,7 @@ class Board
 {
   public int Lines { get; set; }
   public int Columns { get; set; }
-  private Piece[,] _pieces;
+  private Piece?[,] _pieces;
 
   public Board(int lines, int columns)
   {
@@ -13,12 +13,12 @@ class Board
     _pieces = new Piece[lines, columns];
   }
 
-  public Piece GetPieceInPosition(int line, int column)
+  public Piece? GetPieceInPosition(int line, int column)
   {
     return _pieces[line, column];
   }
 
-  public Piece GetPieceInPosition(Position position)
+  public Piece? GetPieceInPosition(Position position)
   {
     return _pieces[position.Line, position.Column];
   }
@@ -30,6 +30,18 @@ class Board
       throw new BoardException("This position already has a piece");
     }
     _pieces[position.Line, position.Column] = piece;
+  }
+
+  public Piece? RemovePiece(Position position)
+  {
+    if (_pieces[position.Line, position.Column] == null)
+    {
+      return null;
+    }
+    Piece piece = _pieces[position.Line, position.Column]!;
+    piece.Position = null;
+    _pieces[position.Line, position.Column] = null;
+    return piece;
   }
 
   public void ValidatePosition(Position position)

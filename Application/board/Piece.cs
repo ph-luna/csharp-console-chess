@@ -14,4 +14,9 @@ class Piece
     Color = color;
     Moviments = 0;
   }
+
+  public void IncreaseMoviments()
+  {
+    Moviments++;
+  }
 }

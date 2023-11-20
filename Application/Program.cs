@@ -10,10 +10,14 @@ try
     Console.Clear();
     Screen.PrintBoard(chessMatch.Board);
 
-    Console.Write("\nPiece Position: ");
+    Console.Write("\nPiece at Position: ");
     Position origin = Screen.ReadChessPosition().ToPosition();
 
-    Console.Write("Destination: ");
+    bool[,] possibleMoviments = chessMatch.Board.GetPieceInPosition(origin)!.GetPossibleMoviments();
+    Console.Clear();
+    Screen.PrintBoard(chessMatch.Board, possibleMoviments);
+
+    Console.Write("\nDestination: ");
     Position destination = Screen.ReadChessPosition().ToPosition();
 
     chessMatch.MakeMove(origin, destination);

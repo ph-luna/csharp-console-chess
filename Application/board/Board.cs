@@ -29,35 +29,30 @@ class Board
     {
       throw new BoardException("This position already has a piece");
     }
+    piece.Position = position;
     _pieces[position.Line, position.Column] = piece;
   }
 
   public Piece? RemovePiece(Position position)
   {
-    if (_pieces[position.Line, position.Column] == null)
-    {
-      return null;
-    }
-    Piece piece = _pieces[position.Line, position.Column]!;
+    Piece? piece = GetPieceInPosition(position);
+    if (piece == null) return null;
     piece.Position = null;
     _pieces[position.Line, position.Column] = null;
     return piece;
   }
 
-  public void ValidatePosition(Position position)
+  public bool IsPositionValid(Position position)
   {
-    if (position.Line < 0
+    return !(position.Line < 0
     || position.Line >= Lines
     || position.Column < 0
-    || position.Column >= Columns)
-    {
-      throw new BoardException("Invalid Position");
-    }
+    || position.Column >= Columns);
   }
 
   public bool HasPiece(Position position)
   {
-    ValidatePosition(position);
+    if (!IsPositionValid(position)) throw new BoardException("Invalid Position");
     return GetPieceInPosition(position) is not null;
   }
 }

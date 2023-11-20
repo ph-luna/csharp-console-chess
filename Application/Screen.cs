@@ -16,10 +16,16 @@ class Screen
   {
     PrintBoard(chessMatch.Board);
     Console.WriteLine($"\nTurn: {chessMatch.Turn}");
-    Console.WriteLine($"Current Player: {chessMatch.CurrentPlayer}");
-    Console.WriteLine("\n-- Captured Pieces --");
+    string currentPlayerColor = chessMatch.CurrentPlayer == Color.White ? WhiteColor : YellowColor;
+    Console.Write($"Current Player: {chessMatch.CurrentPlayer}".Pastel(currentPlayerColor));
+    if (chessMatch.InCheck)
+    {
+      Console.Write(" IN CHECK!!!!".Pastel(currentPlayerColor));
+    }
+    Console.WriteLine("\n\n-- Captured Pieces --");
     PrintPiecesSet(chessMatch, Color.White);
     PrintPiecesSet(chessMatch, Color.Black);
+
   }
 
   public static void PrintPiecesSet(ChessMatch chessMatch, Color color)
@@ -116,7 +122,7 @@ class Screen
 
   public static ChessPosition ReadChessPosition()
   {
-    string input = Console.ReadLine() ?? "";
+    string input = Console.ReadLine()?.ToLower() ?? "";
     char column = input[0];
     int line = int.Parse(input[1] + "");
     return new ChessPosition(column, line);

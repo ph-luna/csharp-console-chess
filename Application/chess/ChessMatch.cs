@@ -10,6 +10,7 @@ class ChessMatch
   public Color CurrentPlayer { get; private set; }
   public HashSet<Piece> CapturedPieces { get; private set; }
   public HashSet<Piece> InGamePieces { get; private set; }
+  public bool InCheck { get; private set; }
 
   public ChessMatch()
   {
@@ -23,23 +24,42 @@ class ChessMatch
     PlaceAllPieces();
   }
 
-  public void MakeMove(Position origin, Position destination)
+  public Piece? MakeMove(Position origin, Position destination)
   {
-    Piece? piece = Board.RemovePiece(origin);
-    if (piece is null) return;
+    Piece piece = Board.RemovePiece(origin)!;
     piece.IncreaseMovements();
-    Piece? CapturedPiece = Board.RemovePiece(destination);
-    if (CapturedPiece is not null)
+    Piece? capturedPiece = Board.RemovePiece(destination);
+    if (capturedPiece is not null)
     {
-      CapturedPieces.Add(CapturedPiece);
-      InGamePieces.Remove(CapturedPiece);
+      CapturedPieces.Add(capturedPiece);
+      InGamePieces.Remove(capturedPiece);
     };
     Board.PlacePiece(piece, destination);
+    return capturedPiece;
+  }
+
+  public void UndoMove(Position origin, Position destination, Piece? capturedPiece)
+  {
+    Piece piece = Board.RemovePiece(destination)!;
+    piece.DecreaseMovements();
+    if (capturedPiece != null)
+    {
+      Board.PlacePiece(capturedPiece, destination);
+      CapturedPieces.Remove(capturedPiece);
+      InGamePieces.Add(capturedPiece);
+    }
+    Board.PlacePiece(piece, origin);
   }
 
   public void MakePlay(Position origin, Position destination)
   {
-    MakeMove(origin, destination);
+    Piece? capturedPiece = MakeMove(origin, destination);
+    if (IsInCheck(CurrentPlayer))
+    {
+      UndoMove(origin, destination, capturedPiece);
+      throw new BoardException("You can't put you in CHECK.");
+    }
+    InCheck = IsInCheck(AdversaryColor(CurrentPlayer));
     Turn++;
     CurrentPlayer = CurrentPlayer == Color.White ? Color.Black : Color.White;
   }
@@ -75,6 +95,37 @@ class ChessMatch
       if (piece.Color == color) filteredInGamePiecesPieces.Add(piece);
     }
     return filteredInGamePiecesPieces;
+  }
+
+  public bool IsInCheck(Color color)
+  {
+    Piece king = FindKing(color);
+    foreach (Piece piece in GetInGamePiecesByColor(AdversaryColor(color)))
+    {
+      bool[,] possibleMovements = piece.GetPossibleMovements();
+      if (possibleMovements[king.Position!.Line, king.Position.Column])
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private static Color AdversaryColor(Color color)
+  {
+    return Color.White == color ? Color.Black : Color.White;
+  }
+
+  private Piece FindKing(Color color)
+  {
+    foreach (Piece piece in GetInGamePiecesByColor(color))
+    {
+      if (piece is King)
+      {
+        return piece;
+      }
+    }
+    throw new Exception("No king piece has found (????)");
   }
 
   private void PlaceNewPiece(Piece piece, ChessPosition chessPosition)

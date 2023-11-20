@@ -80,7 +80,7 @@ class ChessMatch
   public void ValidateDestination(Position origin, Position destination)
   {
     Piece pieceInPosition = Board.GetPieceInPosition(origin)!;
-    if (!pieceInPosition.CanMoveTo(destination)) throw new BoardException("You can't move this piece to this position.");
+    if (!pieceInPosition.IsPossibleMovement(destination)) throw new BoardException("You can't move this piece to this position.");
   }
 
   public HashSet<Piece> CapturedPiecesByColor(Color color)

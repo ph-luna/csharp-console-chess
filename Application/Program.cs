@@ -10,11 +10,9 @@ try
     try
     {
       Console.Clear();
-      Screen.PrintBoard(chessMatch.Board);
-      Console.WriteLine($"\nTurn: {chessMatch.Turn}");
-      Console.WriteLine($"Current Player: {chessMatch.CurrentPlayer}");
+      Screen.PrintMatch(chessMatch);
 
-      Console.Write("\nPiece at Position: ");
+      Console.Write("\n\nPiece at Position: ");
       Position origin = Screen.ReadChessPosition().ToPosition();
       chessMatch.ValidateOrigin(origin);
 

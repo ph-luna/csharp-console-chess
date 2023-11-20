@@ -11,6 +11,30 @@ class Screen
   private const string GreyColor = "#5a5a5a";
   private const string SelectedGray = "#5fb073";
   private const string SelectedBlack = "#315c3b";
+
+  public static void PrintMatch(ChessMatch chessMatch)
+  {
+    PrintBoard(chessMatch.Board);
+    Console.WriteLine($"\nTurn: {chessMatch.Turn}");
+    Console.WriteLine($"Current Player: {chessMatch.CurrentPlayer}");
+    Console.WriteLine("\n-- Captured Pieces --");
+    PrintPiecesSet(chessMatch, Color.White);
+    PrintPiecesSet(chessMatch, Color.Black);
+  }
+
+  public static void PrintPiecesSet(ChessMatch chessMatch, Color color)
+  {
+    HashSet<Piece> pieces = chessMatch.GetCapturedPiecesByColor(color);
+    string printColor = color == Color.White ? WhiteColor : YellowColor;
+    Console.Write(color == Color.White ? "\nWhite: " : "\nBlack: ".Pastel(printColor));
+    Console.Write("[".Pastel(printColor));
+    foreach (Piece piece in pieces)
+    {
+      Console.Write(piece.ToString().Pastel(printColor) + " ");
+    }
+    Console.Write("]".Pastel(printColor));
+  }
+
   public static void PrintPiece(Piece piece, bool isOdd, bool isPossible = false)
   {
     var background = isPossible ? SelectedBlack : BlackColor;

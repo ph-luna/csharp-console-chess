@@ -6,9 +6,9 @@ class Rook : Piece
 {
   public Rook(Board board, Color color) : base(board, color)
   {
-    for (Directions i = 0; (int)i < 8; i += 2)
+    for (int i = 0; i < 8; i += 2)
     {
-      AllowDirection(i);
+      AllowDirection((Directions)i);
     }
   }
 

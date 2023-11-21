@@ -171,23 +171,11 @@ class ChessMatch
 
   private void PlaceAllPieces()
   {
-    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('c', 1));
-    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('c', 2));
-    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('d', 2));
-    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('e', 2));
-    // PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('e', 1));
-    // PlaceNewPiece(new King(Board, Color.White), new ChessPosition('d', 1));
-    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 8));
-    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 7));
-    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('d', 7));
-    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('e', 7));
-    // PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('e', 8));
-    // PlaceNewPiece(new King(Board, Color.Black), new ChessPosition('d', 8));
-
-    PlaceNewPiece(new King(Board, Color.White), new ChessPosition('a', 8));
-    PlaceNewPiece(new Rook(Board, Color.White), new ChessPosition('b', 8));
-    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('h', 7));
-    PlaceNewPiece(new Rook(Board, Color.Black), new ChessPosition('c', 1));
-    PlaceNewPiece(new King(Board, Color.Black), new ChessPosition('d', 1));
+    PlaceNewPiece(new King(Board, Color.White), new ChessPosition('b', 1));
+    PlaceNewPiece(new King(Board, Color.Black), new ChessPosition('h', 8));
+    PlaceNewPiece(new Pawn(Board, Color.White), new ChessPosition('b', 5));
+    PlaceNewPiece(new Pawn(Board, Color.Black), new ChessPosition('a', 6));
+    PlaceNewPiece(new Pawn(Board, Color.Black), new ChessPosition('b', 6));
+    PlaceNewPiece(new Pawn(Board, Color.Black), new ChessPosition('c', 6));
   }
 }

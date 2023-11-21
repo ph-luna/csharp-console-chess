@@ -1,11 +1,12 @@
 using board;
 
 namespace chess;
-class King : Piece
+
+class Bishop : Piece
 {
-  public King(Board board, Color color) : base(board, color)
+  public Bishop(Board board, Color color) : base(board, color)
   {
-    for (int i = 0; i < 8; i++)
+    for (int i = 1; i < 8; i += 2)
     {
       AllowDirection((Directions)i);
     }
@@ -13,7 +14,7 @@ class King : Piece
 
   public override string ToString()
   {
-    return "♔";
+    return "♗";
   }
 
   public override bool[,] GetPossibleMovements()
@@ -24,9 +25,11 @@ class King : Piece
     {
       Position projectedPosition = new(Position!.Line, Position.Column);
       projectedPosition.Change(projectedPosition.Line + direction[0], projectedPosition.Column + direction[1]);
-      if (CanMove(projectedPosition))
+      while (CanMove(projectedPosition))
       {
         possibleMovements[projectedPosition.Line, projectedPosition.Column] = true;
+        if (Board.GetPieceInPosition(projectedPosition) is not null && Board.GetPieceInPosition(projectedPosition)!.Color != Color) break;
+        projectedPosition.Change(projectedPosition.Line + direction[0], projectedPosition.Column + direction[1]);
       }
     }
 

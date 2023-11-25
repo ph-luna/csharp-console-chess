@@ -138,7 +138,7 @@ class Screen
       !char.IsLetter(column) ||
       column > 'h' ||
       line > 8 ||
-      input.Length > 2
+      input.Length != 2
     ) throw new BoardException("Invalid position.");
     return new ChessPosition(column, line);
   }

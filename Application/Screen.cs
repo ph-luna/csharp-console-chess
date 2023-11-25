@@ -1,4 +1,3 @@
-
 using board;
 using chess;
 using Pastel;
@@ -133,7 +132,14 @@ class Screen
   {
     string input = Console.ReadLine()?.ToLower() ?? "";
     char column = input[0];
-    int line = int.Parse(input[1] + "");
+    bool parseSuccess = int.TryParse(input[1] + "", out int line);
+    if (
+      !parseSuccess ||
+      !char.IsLetter(column) ||
+      column > 'h' ||
+      line > 8 ||
+      input.Length > 2
+    ) throw new BoardException("Invalid position.");
     return new ChessPosition(column, line);
   }
 

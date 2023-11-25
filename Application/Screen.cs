@@ -131,14 +131,14 @@ class Screen
   public static ChessPosition ReadChessPosition()
   {
     string input = Console.ReadLine()?.ToLower() ?? "";
+    if (input.Length != 2) throw new BoardException("Invalid position.");
     char column = input[0];
     bool parseSuccess = int.TryParse(input[1] + "", out int line);
     if (
       !parseSuccess ||
       !char.IsLetter(column) ||
       column > 'h' ||
-      line > 8 ||
-      input.Length != 2
+      line > 8
     ) throw new BoardException("Invalid position.");
     return new ChessPosition(column, line);
   }

@@ -3,8 +3,10 @@ using board;
 namespace chess;
 class Pawn : Piece
 {
-  public Pawn(Board board, Color color) : base(board, color)
+  private ChessMatch _chessMatch;
+  public Pawn(ChessMatch chessMatch, Color color) : base(chessMatch.Board, color)
   {
+    _chessMatch = chessMatch;
     if (Color == Color.White)
     {
       AllowDirection(Directions.NORTH);
@@ -37,16 +39,44 @@ class Pawn : Piece
 
       projectedPosition = new(Position!.Line, Position.Column);
       projectedPosition.Change(projectedPosition.Line + direction[0], projectedPosition.Column + direction[1] + 1);
-      if (Board.IsPositionValid(projectedPosition) && Board.GetPieceInPosition(projectedPosition) is not null)
+      if (Board.IsPositionValid(projectedPosition) && HasEnemyPiece(projectedPosition))
       {
         possibleMovements[projectedPosition.Line, projectedPosition.Column] = true;
       }
 
       projectedPosition = new(Position!.Line, Position.Column);
       projectedPosition.Change(projectedPosition.Line + direction[0], projectedPosition.Column + direction[1] - 1);
-      if (Board.IsPositionValid(projectedPosition) && Board.GetPieceInPosition(projectedPosition) is not null)
+      if (Board.IsPositionValid(projectedPosition) && HasEnemyPiece(projectedPosition))
       {
         possibleMovements[projectedPosition.Line, projectedPosition.Column] = true;
+      }
+    }
+
+    return EnPassant(possibleMovements);
+  }
+
+  private bool HasEnemyPiece(Position position)
+  {
+    Piece? piece = Board.GetPieceInPosition(position);
+    if (piece is null) return false;
+    return piece.Color != Color;
+  }
+
+  private bool[,] EnPassant(bool[,] possibleMovements)
+  {
+    int enPassantLine = Color == Color.White ? 3 : 4;
+    if (Position!.Line == enPassantLine)
+    {
+      int line = Color == Color.White ? -1 : 1;
+      Position leftSide = new(Position.Line, Position.Column - 1);
+      if (HasEnemyPiece(leftSide) && _chessMatch.VunerableToEnPassant == Board.GetPieceInPosition(leftSide))
+      {
+        possibleMovements[leftSide.Line + line, leftSide.Column] = true;
+      }
+      Position rightSide = new(Position.Line, Position.Column + 1);
+      if (HasEnemyPiece(rightSide) && _chessMatch.VunerableToEnPassant == Board.GetPieceInPosition(rightSide))
+      {
+        possibleMovements[rightSide.Line + line, rightSide.Column] = true;
       }
     }
 

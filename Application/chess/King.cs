@@ -78,6 +78,7 @@ class King : Piece
 
   private bool IsRookAvaibleForCastling(Position rookPosition)
   {
+    if (!Board.IsPositionValid(rookPosition)) return false;
     Piece? rook = Board.GetPieceInPosition(rookPosition.Line, rookPosition.Column);
     return rook is not null && rook.Color == Color && rook.Movements == 0;
   }

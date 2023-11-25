@@ -33,6 +33,11 @@ class ChessMatch
     piece.IncreaseMovements();
     Piece? capturedPiece = Board.RemovePiece(destination);
     Board.PlacePiece(piece, destination);
+    int promotionLine = piece.Color == Color.White ? 0 : 7;
+    if (piece is Pawn && destination.Line == promotionLine)
+    {
+      MakePawnPromotion(destination);
+    }
     if (piece is Pawn && origin.Column != destination.Column && capturedPiece is null)
     {
       return MakeEnPassant(piece, destination);
@@ -52,6 +57,14 @@ class ChessMatch
   public void UndoMove(Position origin, Position destination, Piece? capturedPiece)
   {
     Piece piece = Board.RemovePiece(destination)!;
+    if (piece.Promoted)
+    {
+      int movements = piece.Movements;
+      piece = new Pawn(this, CurrentPlayer)
+      {
+        Movements = movements
+      };
+    }
     piece.DecreaseMovements();
     if (piece is King && IsCastlingMovement(origin, destination))
     {
@@ -136,6 +149,17 @@ class ChessMatch
     CapturedPieces.Add(capturedPiece);
     InGamePieces.Remove(capturedPiece);
     return capturedPiece;
+  }
+
+  public void MakePawnPromotion(Position destination)
+  {
+    Piece piece = Board.RemovePiece(destination)!;
+    InGamePieces.Remove(piece);
+    Piece newPiece = new Queen(Board, CurrentPlayer);
+    newPiece.SetAsPromoted();
+    newPiece.Movements = piece.Movements;
+    Board.PlacePiece(newPiece, destination);
+    InGamePieces.Add(newPiece);
   }
 
   public void ValidateOrigin(Position origin)

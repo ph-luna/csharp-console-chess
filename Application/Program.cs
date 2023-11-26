@@ -1,8 +1,9 @@
-﻿using board;
+using board;
 using chess;
 
 try
 {
+  Console.OutputEncoding = System.Text.Encoding.UTF8;
   ChessMatch chessMatch = new();
 
   while (!chessMatch.Finished)

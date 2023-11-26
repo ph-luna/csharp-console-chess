@@ -82,7 +82,7 @@ class Screen
           }
           else
           {
-            Console.Write("  ");
+            Console.Write("  ".PastelBg(BlackColor));
           }
         }
         else

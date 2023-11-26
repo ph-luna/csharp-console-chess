@@ -24,3 +24,6 @@ If the game detects a checkmate, the match will conclude, and the winning player
 To run this project, you will need:
 - .NET v7;
 - A terminal with support for Unicode and RGB colors.
+- Windows or Linux x64.
+
+You can download the executable files for your SO from the github releases section.
